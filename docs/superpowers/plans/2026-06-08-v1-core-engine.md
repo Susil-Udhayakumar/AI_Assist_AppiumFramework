@@ -1,5 +1,23 @@
 # v1 Core Engine Implementation Plan
 
+> **STATUS: ✅ IMPLEMENTED + VERIFIED** — all 12 tasks complete; `mvn test` green (28 tests) on JDK 17.
+> The code in `core/src/**` is now the source of truth; the task code blocks below are the
+> as-planned reference.
+>
+> **Amendment (applied during implementation):** `core` holds the driver as the narrow
+> `org.openqa.selenium.WebDriver` interface, **not** the concrete `io.appium.java_client.AppiumDriver`.
+> Reason: Mockito's inline mock maker cannot instrument the concrete Appium/Selenium hierarchy
+> (it references removed Selenium `html5` classes → `NoClassDefFoundError: RemoteLocationContext`),
+> and `core` only needs the `WebDriver` contract (`quit()`). This is also better Interface-Segregation.
+> Affected vs. the task blocks below: `DriverProvider.create(...)` returns `WebDriver`;
+> `DriverContext.driver()` returns `WebDriver` plus a `DriverContext.appiumDriver()` convenience cast;
+> `BaseScreen` exposes `driver()` (WebDriver) and `appiumDriver()`; `DriverLifecycle` uses `WebDriver`;
+> `FakeDriverProvider` and the affected tests mock `WebDriver.class`. Real driver providers (the
+> `drivers` module) return an `AppiumDriver`, which is a `WebDriver`.
+>
+> **Build hardening:** Surefire pins the `surefire-junit-platform` provider (TestNG is a compile
+> dependency for `BaseTest`, so the JUnit 5 engine must be selected explicitly).
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Build the `core` module — the dependency root of the Appium platform — providing config loading, per-thread context isolation, an SPI registry, an event bus, a thread-safe device pool, lifecycle orchestration, and TestNG base classes, fully unit-tested against a fake driver with no real device required.
