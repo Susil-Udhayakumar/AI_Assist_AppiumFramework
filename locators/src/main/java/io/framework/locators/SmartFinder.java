@@ -1,7 +1,6 @@
 package io.framework.locators;
 
 import io.framework.core.exception.ElementNotFoundException;
-import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebDriver;
@@ -48,13 +47,13 @@ public final class SmartFinder {
         }
 
         if (healer != null) {
-            Optional<By> healed = healer.heal(
+            Optional<LocatorCandidate> healed = healer.heal(
                     new HealRequest(screen, element, candidates, pageSource(context)));
             if (healed.isPresent()) {
                 try {
-                    return context.findElement(healed.get());
+                    return context.findElement(healed.get().toBy());
                 } catch (NoSuchElementException miss) {
-                    tried.add("healed:" + healed.get());
+                    tried.add("healed:" + healed.get().key());
                 }
             }
         }

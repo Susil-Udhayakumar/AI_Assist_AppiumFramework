@@ -1,8 +1,9 @@
 package io.framework.ai.heuristic;
 
 import io.framework.locators.HealRequest;
+import io.framework.locators.LocatorCandidate;
+import io.framework.locators.Strategy;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,10 +25,11 @@ class HeuristicElementHealerTest {
                 + "<android.widget.TextView text=\"Welcome\"/>"
                 + "</hierarchy>";
 
-        Optional<By> healed = healer.heal(request("loginButton", xml));
+        Optional<LocatorCandidate> healed = healer.heal(request("loginButton", xml));
 
         assertThat(healed).isPresent();
-        assertThat(healed.get().toString()).contains("Login button");
+        assertThat(healed.get().strategy()).isEqualTo(Strategy.ACCESSIBILITY_ID);
+        assertThat(healed.get().value()).isEqualTo("Login button");
     }
 
     @Test
@@ -36,9 +38,9 @@ class HeuristicElementHealerTest {
                 + "<android.widget.Button resource-id=\"com.x.app:id/login_button\"/>"
                 + "</hierarchy>";
 
-        Optional<By> healed = healer.heal(request("loginButton", xml));
+        Optional<LocatorCandidate> healed = healer.heal(request("loginButton", xml));
 
-        assertThat(healed).contains(By.id("com.x.app:id/login_button"));
+        assertThat(healed).contains(new LocatorCandidate(Strategy.ID, "com.x.app:id/login_button"));
     }
 
     @Test

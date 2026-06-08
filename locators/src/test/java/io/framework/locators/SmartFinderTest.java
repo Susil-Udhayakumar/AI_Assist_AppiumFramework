@@ -78,7 +78,7 @@ class SmartFinderTest {
         when(ctx.findElement(By.xpath("//Button"))).thenThrow(new NoSuchElementException("nope"));
         when(ctx.findElement(By.id("healed"))).thenReturn(el);
 
-        ElementHealer healer = request -> Optional.of(By.id("healed"));
+        ElementHealer healer = request -> Optional.of(new LocatorCandidate(Strategy.ID, "healed"));
         var finder = new SmartFinder(repo(), new LocatorStats(), healer);
 
         assertThat(finder.find(ctx, "Login", "btn")).isSameAs(el);

@@ -11,9 +11,10 @@ import io.framework.core.parallel.DevicePool;
 import io.framework.core.spi.ServiceRegistry;
 import io.framework.devices.DeviceProvider;
 import io.framework.devices.DevicePools;
+import io.framework.knowledge.KnowledgeStore;
+import io.framework.knowledge.MemoizingElementHealer;
 import io.framework.locators.ElementHealer;
 import io.framework.locators.LocatorRepository;
-import io.framework.locators.LocatorStats;
 import io.framework.locators.SmartFinder;
 import io.framework.observability.CaptureLayout;
 import io.framework.observability.ScreenshotProvider;
@@ -38,7 +39,8 @@ public final class Bootstrap {
 
     public static FrameworkComponents assemble(FrameworkConfig config,
                                                LocatorRepository locators,
-                                               Path reportBase) {
+                                               Path reportBase,
+                                               Path knowledgeDir) {
         ServiceRegistry registry = new ServiceRegistry();
 
         DriverProvider driverProvider = registry.get(DriverProvider.class);
@@ -48,8 +50,10 @@ public final class Bootstrap {
         EventBus bus = new EventBus();
         DriverLifecycle lifecycle = new DriverLifecycle(pool, driverProvider, bus);
 
-        ElementHealer healer = new HeuristicElementHealer();          // no-AI default
-        SmartFinder finder = new SmartFinder(locators, new LocatorStats(), healer);
+        // persistent learning by default: cross-run ranking + reusable heals, still no-AI
+        KnowledgeStore knowledge = new KnowledgeStore(knowledgeDir);
+        ElementHealer healer = new MemoizingElementHealer(new HeuristicElementHealer(), knowledge.heals());
+        SmartFinder finder = new SmartFinder(locators, knowledge.locators(), healer);
         ElementActions actions = new ElementActions();
 
         Reporters reporters = new Reporters(registry.all(Reporter.class));

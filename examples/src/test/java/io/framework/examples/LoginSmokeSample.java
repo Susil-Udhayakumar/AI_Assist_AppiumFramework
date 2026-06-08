@@ -67,7 +67,7 @@ public class LoginSmokeSample extends BaseTest {
             } catch (Exception e) {
                 throw new IllegalStateException("could not load locators.yaml", e);
             }
-            framework = Bootstrap.assemble(config, repo, Path.of("reports"));
+            framework = Bootstrap.assemble(config, repo, Path.of("reports"), Path.of("knowledge"));
         }
         return framework;
     }

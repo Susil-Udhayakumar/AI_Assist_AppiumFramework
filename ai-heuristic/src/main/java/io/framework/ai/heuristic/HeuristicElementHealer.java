@@ -1,9 +1,9 @@
 package io.framework.ai.heuristic;
 
-import io.appium.java_client.AppiumBy;
 import io.framework.locators.ElementHealer;
 import io.framework.locators.HealRequest;
-import org.openqa.selenium.By;
+import io.framework.locators.LocatorCandidate;
+import io.framework.locators.Strategy;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -18,8 +18,8 @@ import java.util.Set;
 /**
  * Deterministic, offline {@link ElementHealer}. When every registered locator candidate misses,
  * it parses the page source and finds the on-screen element whose accessibility-id / resource-id
- * / text best matches the (tokenized) element name, then returns a concrete {@link By} for it.
- * No model, no network — this is the no-AI heal path.
+ * / text best matches the (tokenized) element name, then returns a {@link LocatorCandidate} for
+ * it. No model, no network — this is the no-AI heal path.
  */
 public final class HeuristicElementHealer implements ElementHealer {
 
@@ -27,7 +27,7 @@ public final class HeuristicElementHealer implements ElementHealer {
     private static final double THRESHOLD = 0.5;
 
     @Override
-    public Optional<By> heal(HealRequest request) {
+    public Optional<LocatorCandidate> heal(HealRequest request) {
         String xml = request.pageSource();
         if (xml == null || xml.isBlank()) {
             return Optional.empty();
@@ -38,27 +38,20 @@ public final class HeuristicElementHealer implements ElementHealer {
         }
 
         double bestScore = 0.0;
-        By best = null;
+        LocatorCandidate best = null;
         for (Element e : elements(xml)) {
             for (Attr attr : attributes(e)) {
                 double score = Tokenizer.jaccard(target, attr.tokens());
                 if (score > bestScore) {
                     bestScore = score;
-                    best = attr.toBy();
+                    best = attr.candidate();
                 }
             }
         }
         return bestScore >= THRESHOLD ? Optional.ofNullable(best) : Optional.empty();
     }
 
-    private record Attr(String kind, String value, Set<String> tokens) {
-        By toBy() {
-            return switch (kind) {
-                case "accessibilityId" -> AppiumBy.accessibilityId(value);
-                case "id" -> By.id(value);
-                default -> By.xpath("//*[@text='" + value + "']");
-            };
-        }
+    private record Attr(LocatorCandidate candidate, Set<String> tokens) {
     }
 
     private static java.util.List<Attr> attributes(Element e) {
@@ -68,13 +61,14 @@ public final class HeuristicElementHealer implements ElementHealer {
         String text = firstNonBlank(e.getAttribute("text"), e.getAttribute("label"),
                 e.getAttribute("value"));
         if (!acc.isBlank()) {
-            attrs.add(new Attr("accessibilityId", acc, Tokenizer.tokens(acc)));
+            attrs.add(new Attr(new LocatorCandidate(Strategy.ACCESSIBILITY_ID, acc), Tokenizer.tokens(acc)));
         }
         if (!rid.isBlank()) {
-            attrs.add(new Attr("id", rid, Tokenizer.tokens(localId(rid))));
+            attrs.add(new Attr(new LocatorCandidate(Strategy.ID, rid), Tokenizer.tokens(localId(rid))));
         }
         if (!text.isBlank()) {
-            attrs.add(new Attr("text", text, Tokenizer.tokens(text)));
+            attrs.add(new Attr(new LocatorCandidate(Strategy.XPATH, "//*[@text='" + text + "']"),
+                    Tokenizer.tokens(text)));
         }
         return attrs;
     }
