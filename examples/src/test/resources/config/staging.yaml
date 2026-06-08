@@ -1,0 +1,16 @@
+env: staging
+platform: android
+execution:
+  mode: sequential
+  parallelBy: test
+  threads: 1
+retry:
+  enabled: true
+  maxRetries: 1
+  retryOn: [infra, network]
+  quarantineAfter: 3
+capture:
+  screenshots: onFailure
+  video: off
+  network: false
+  vitals: false

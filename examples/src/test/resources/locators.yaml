@@ -1,0 +1,11 @@
+LoginScreen:
+  username:
+    - {strategy: id, value: username}
+    - {strategy: accessibilityId, value: username_field}
+  password:
+    - {strategy: id, value: password}
+    - {strategy: accessibilityId, value: password_field}
+  loginButton:
+    - {strategy: id, value: login}
+    - {strategy: accessibilityId, value: login_button}
+    - {strategy: xpath, value: "//*[@text='Login']"}
