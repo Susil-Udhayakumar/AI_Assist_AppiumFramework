@@ -18,6 +18,7 @@
     <module>ai-heuristic</module>
     <module>actions</module>
     <module>observability</module>
+    <module>reporting</module>
   </modules>
 
   <properties>
