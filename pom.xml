@@ -12,6 +12,7 @@
   <modules>
     <module>core</module>
     <module>secrets</module>
+    <module>drivers</module>
   </modules>
 
   <properties>
