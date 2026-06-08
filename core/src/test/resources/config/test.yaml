@@ -1,0 +1,17 @@
+env: test
+platform: android
+execution:
+  mode: parallel
+  parallelBy: device
+  threads: 2
+retry:
+  enabled: true
+  maxRetries: 2
+  retryOn: [infra, network]
+  quarantineAfter: 3
+capture:
+  screenshots: onAction
+  video: onFailure
+  network: true
+  vitals: true
+baseUrl: https://${env:TEST_HOST}/api
