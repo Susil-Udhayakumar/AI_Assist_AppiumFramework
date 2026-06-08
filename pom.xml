@@ -14,6 +14,7 @@
     <module>secrets</module>
     <module>drivers</module>
     <module>devices</module>
+    <module>locators</module>
   </modules>
 
   <properties>
