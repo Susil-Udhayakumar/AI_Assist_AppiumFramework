@@ -17,6 +17,7 @@
     <module>locators</module>
     <module>ai-heuristic</module>
     <module>actions</module>
+    <module>observability</module>
   </modules>
 
   <properties>
