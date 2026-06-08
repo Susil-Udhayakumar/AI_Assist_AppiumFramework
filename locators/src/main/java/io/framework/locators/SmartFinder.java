@@ -23,10 +23,10 @@ import java.util.Optional;
 public final class SmartFinder {
 
     private final LocatorRepository repository;
-    private final LocatorStats stats;
+    private final CandidateRanker stats;
     private final ElementHealer healer;   // nullable
 
-    public SmartFinder(LocatorRepository repository, LocatorStats stats, ElementHealer healer) {
+    public SmartFinder(LocatorRepository repository, CandidateRanker stats, ElementHealer healer) {
         this.repository = repository;
         this.stats = stats;
         this.healer = healer;

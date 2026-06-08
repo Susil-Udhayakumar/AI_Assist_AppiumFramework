@@ -11,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * candidate first, so the no-AI self-heal gets more reliable over a run. (Persistent,
  * cross-run ranking arrives with the `knowledge` module; this is the in-process v1.)
  */
-public final class LocatorStats {
+public final class LocatorStats implements CandidateRanker {
 
     private final Map<String, Map<String, Integer>> wins = new ConcurrentHashMap<>();
 

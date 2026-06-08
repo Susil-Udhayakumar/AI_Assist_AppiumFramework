@@ -1,5 +1,6 @@
 package io.framework.knowledge;
 
+import io.framework.locators.CandidateRanker;
 import io.framework.locators.LocatorCandidate;
 
 import java.nio.file.Path;
@@ -15,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * per element and ranks future lookups by past success — so the no-AI self-heal gets more
  * reliable run after run. Backed by a git-friendly YAML file.
  */
-public final class LocatorMemory {
+public final class LocatorMemory implements CandidateRanker {
 
     private final Path file;
     private final Map<String, Map<String, Integer>> wins = new ConcurrentHashMap<>();
