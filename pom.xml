@@ -19,6 +19,7 @@
     <module>ai-llm</module>
     <module>actions</module>
     <module>api</module>
+    <module>visual</module>
     <module>observability</module>
     <module>reporting</module>
     <module>knowledge</module>
