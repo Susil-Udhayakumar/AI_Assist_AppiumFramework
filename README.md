@@ -9,23 +9,40 @@ keeping token usage low.
 
 > Java 17 · Maven (multi-module) · TestNG runner · Appium java-client 9.x
 
-## v1 status — implemented & verified
+## Status — implemented & verified
 
-A thin, runnable slice through the architecture. Every module builds with `mvn test` green
-(unit-tested without a device; on-device flow is the `examples` sample).
+15 modules, all building with `mvn test` green (unit-tested without a device/network; the
+on-device flow is the `examples` sample). The whole intelligence layer works **offline by
+default** (heuristic), with LLM engines swappable by config.
 
 | Module | Purpose |
 |--------|---------|
-| `core` | config cascade, per-thread context, SPI registry, event bus, device pool, lifecycle, base classes |
+| `core` | config cascade, per-thread context, SPI registry, event bus, device pool, lifecycle, base classes, `FailureClassifier` SPI, `SmartRetryAnalyzer` |
 | `secrets` | `SecretResolver` SPI (env), masking, `${secret:...}` resolution |
 | `drivers` | `AppSource`, capability builders, `DriverFactory` (real `DriverProvider`) |
 | `devices` | `DeviceProvider` SPI, local emulator/simulator discovery, `DevicePool` bridge |
-| `locators` | multi-candidate repo, success-ranked smart-find, `ElementHealer` SPI (no-AI self-heal) |
-| `ai-heuristic` | deterministic `HeuristicElementHealer` (page-source token match) |
+| `locators` | multi-candidate repo, success-ranked smart-find, `ElementHealer` SPI, `CandidateRanker` |
+| `ai-heuristic` | deterministic `HeuristicElementHealer` + `HeuristicFailureClassifier` (no AI) |
+| `ai-llm` | LLM-backed `LlmElementHealer` + `LlmFailureClassifier` over a tiny `LlmClient` |
 | `actions` | `ActionSupport` platform matrix, gesture geometry, smart-sync waits, element actions |
+| `api` | REST `ApiClient` over an injectable transport, JSON response helpers, JDK transport |
+| `visual` | pixel `VisualComparator` + `VisualBaseline` (auto-create, diff artifacts) |
 | `observability` | EventBus capture listener: screenshots + split logs |
-| `reporting` | `Reporter` SPI + HTML reporter + fan-out |
-| `examples` | wires it all; end-to-end smoke test + on-device sample |
+| `reporting` | `Reporter` SPI + HTML reporter + fan-out + Requirement Traceability Matrix |
+| `knowledge` | persistent `LocatorMemory`, `HealMemory`, `FailureMemory`, `ExecutionHistory` + memoizing wrappers |
+| `security` | `SecurityScanner` SPI, manifest audit + secret scan (MASVS-tagged, redacted) |
+| `examples` | wires it all; config-driven AI selection; end-to-end smoke test + on-device sample |
+
+Cross-cutting (in `examples`/`Bootstrap`): config-driven heuristic-vs-LLM selection wrapped in
+persistent memory, so the framework **learns across runs with zero AI** (winning locators
+promoted, heals + failure classifications solved once then reused) and retries only
+classified-transient failures (never assertions).
+
+### Defined as SPI drop-in points (need vendor accounts/infra to implement)
+Cloud `DeviceProvider`s (BrowserStack/Sauce/LambdaTest), `DistributionProvider`s
+(Play/App Store/TestFlight), test-management/defect providers (TestRail/Jira/...), dynamic
+security scanners (MobSF/ZAP/Frida), and real `LlmClient`/`HttpTransport` providers — each is a
+thin jar against the existing interface.
 
 ## Build & test
 

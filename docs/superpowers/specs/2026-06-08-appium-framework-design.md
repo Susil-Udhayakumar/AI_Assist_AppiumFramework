@@ -238,9 +238,32 @@ The 17 modules are the **roadmap**; each gets its own spec → plan → implemen
 
 ## 11. Implementation status
 
+**15 modules implemented + verified** (`mvn test` green on JDK 17, ~187 tests, no device/network needed):
+
 | Module | Status |
 |--------|--------|
-| core | ✅ implemented + verified (28 tests green on JDK 17) |
-| secrets | ⏳ next |
-| drivers, devices, locators, ai-heuristic, actions, observability, reporting, bootstrap-cli, examples | planned (v1) |
-| remaining 6 modules + waves 1–10 | roadmap |
+| core (+ FailureClassifier SPI, SmartRetryAnalyzer) | ✅ implemented + verified |
+| secrets | ✅ implemented + verified |
+| drivers | ✅ implemented + verified |
+| devices (local) | ✅ implemented + verified |
+| locators (+ CandidateRanker) | ✅ implemented + verified |
+| ai-heuristic (heal + classify) | ✅ implemented + verified |
+| ai-llm (heal + classify) | ✅ implemented + verified |
+| actions | ✅ implemented + verified |
+| api | ✅ implemented + verified |
+| visual | ✅ implemented + verified |
+| observability | ✅ implemented + verified |
+| reporting (+ Requirement Traceability Matrix) | ✅ implemented + verified |
+| knowledge (locator/heal/failure memory, history, memoizing wrappers) | ✅ implemented + verified |
+| security (static: manifest + secret scan) | ✅ implemented + verified |
+| examples (config-driven AI selection, end-to-end + on-device) | ✅ implemented + verified |
+
+**Wired cross-cutting:** persistent cross-run learning by default (LocatorMemory ranking +
+memoizing heal/classify), config-driven heuristic↔LLM selection, classifier-driven smart retries.
+
+**Defined as SPI drop-in points (require vendor accounts/infra):** cloud `DeviceProvider`s
+(BrowserStack/Sauce/LambdaTest), `DistributionProvider`s (Play/App Store/TestFlight),
+test-management/defect providers (TestRail/Jira/Xray/qTest/ADO), dynamic security scanners
+(MobSF/ZAP/Frida), real `LlmClient` + `HttpTransport` providers. `bootstrap-cli` (env setup,
+emulator/server control, ingestion, scaffolding) and the reference-knowledge ingestion half
+remain as planned roadmap items.
