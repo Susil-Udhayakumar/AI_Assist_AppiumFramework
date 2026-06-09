@@ -57,13 +57,15 @@ mvn test          # build + run all module unit/integration tests (no device nee
    `LoginSmokeSample`.
 3. `mvn -pl examples surefire:test -Dtest=LoginSmokeSample -Dappium.server.url=http://127.0.0.1:4723`
 
-## Design
+## Architecture
 
-See `docs/superpowers/specs/2026-06-08-appium-framework-design.md` for the full 17-module target
-architecture and the roadmap (waves 1–10: cloud devices, full observability, knowledge store,
-LLM engines, RTM/dashboards, API + mock server, visual testing, test-management + distribution,
-security, and enhancements). Each module carries a `DOCS.md` (what it is, how to maintain, how to
-extend, token-optimization, examples).
+![Module architecture](docs/architecture.svg)
+
+See **[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)** for the layered module map, SPI seams, and
+dependency rules, and
+`docs/superpowers/specs/2026-06-08-appium-framework-design.md` for the full design + roadmap.
+Each module carries a `DOCS.md` (what it is, how to maintain, how to extend, token-optimization,
+examples).
 
 ## Principles
 

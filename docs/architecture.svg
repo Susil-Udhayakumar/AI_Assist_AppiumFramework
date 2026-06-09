@@ -1,0 +1,90 @@
+<svg viewBox="0 0 680 432" xmlns="http://www.w3.org/2000/svg" font-family="system-ui, -apple-system, Segoe UI, sans-serif" role="img" aria-labelledby="ttl dsc">
+  <title id="ttl">AI-Assist Appium framework — 16-module architecture</title>
+  <desc id="dsc">Layered module map. examples wires everything; intelligence, interaction, quality, and setup layers sit above the core engine. Purple = ServiceLoader SPI seams (swap by classpath); blue = plain modules; amber = wiring; gray = core engine root. Every layer depends downward on core.</desc>
+
+  <style>
+    .t { font-size: 12.5px; font-weight: 600; }
+    .s { font-size: 9.5px; fill: #5b6472; }
+    .lg { font-size: 10px; fill: #5b6472; }
+  </style>
+
+  <!-- legend -->
+  <rect x="14" y="8" width="13" height="13" rx="3" fill="#e7e8ec" stroke="#6b7280"/>
+  <text class="lg" x="32" y="18">engine</text>
+  <rect x="92" y="8" width="13" height="13" rx="3" fill="#e6f0fb" stroke="#2563eb"/>
+  <text class="lg" x="110" y="18">module</text>
+  <rect x="182" y="8" width="13" height="13" rx="3" fill="#eeedfe" stroke="#534ab7"/>
+  <text class="lg" x="200" y="18">SPI seam — swap by classpath</text>
+  <rect x="470" y="8" width="13" height="13" rx="3" fill="#fcf1dd" stroke="#b7791f"/>
+  <text class="lg" x="488" y="18">wiring · depends downward</text>
+
+  <!-- Row A: wiring -->
+  <rect x="14" y="36" width="648" height="44" rx="10" fill="#fcf1dd" stroke="#b7791f"/>
+  <text class="t" x="338" y="55" text-anchor="middle" fill="#6b4e0f">examples</text>
+  <text class="s" x="338" y="70" text-anchor="middle">assembles all · config-driven AI selection · retry</text>
+
+  <!-- Row B: intelligence -->
+  <rect x="14" y="94" width="150" height="44" rx="10" fill="#eeedfe" stroke="#534ab7"/>
+  <text class="t" x="89" y="113" text-anchor="middle" fill="#2e2a6b">ai-heuristic</text>
+  <text class="s" x="89" y="128" text-anchor="middle">no-AI heal + classify</text>
+  <rect x="180" y="94" width="150" height="44" rx="10" fill="#eeedfe" stroke="#534ab7"/>
+  <text class="t" x="255" y="113" text-anchor="middle" fill="#2e2a6b">ai-llm</text>
+  <text class="s" x="255" y="128" text-anchor="middle">LLM heal + classify</text>
+  <rect x="346" y="94" width="150" height="44" rx="10" fill="#e6f0fb" stroke="#2563eb"/>
+  <text class="t" x="421" y="113" text-anchor="middle" fill="#0c447c">knowledge</text>
+  <text class="s" x="421" y="128" text-anchor="middle">persistent memory</text>
+  <rect x="512" y="94" width="150" height="44" rx="10" fill="#e6f0fb" stroke="#2563eb"/>
+  <text class="t" x="587" y="113" text-anchor="middle" fill="#0c447c">core: classifier</text>
+  <text class="s" x="587" y="128" text-anchor="middle">+ smart retry</text>
+
+  <!-- Row C: interaction -->
+  <rect x="14" y="152" width="150" height="44" rx="10" fill="#eeedfe" stroke="#534ab7"/>
+  <text class="t" x="89" y="171" text-anchor="middle" fill="#2e2a6b">locators</text>
+  <text class="s" x="89" y="186" text-anchor="middle">multi-candidate heal</text>
+  <rect x="180" y="152" width="150" height="44" rx="10" fill="#e6f0fb" stroke="#2563eb"/>
+  <text class="t" x="255" y="171" text-anchor="middle" fill="#0c447c">actions</text>
+  <text class="s" x="255" y="186" text-anchor="middle">gestures · waits · matrix</text>
+  <rect x="346" y="152" width="150" height="44" rx="10" fill="#e6f0fb" stroke="#2563eb"/>
+  <text class="t" x="421" y="171" text-anchor="middle" fill="#0c447c">api</text>
+  <text class="s" x="421" y="186" text-anchor="middle">REST mid-flow</text>
+  <rect x="512" y="152" width="150" height="44" rx="10" fill="#e6f0fb" stroke="#2563eb"/>
+  <text class="t" x="587" y="171" text-anchor="middle" fill="#0c447c">visual</text>
+  <text class="s" x="587" y="186" text-anchor="middle">pixel baseline diff</text>
+
+  <!-- Row D: quality -->
+  <rect x="14" y="210" width="150" height="44" rx="10" fill="#e6f0fb" stroke="#2563eb"/>
+  <text class="t" x="89" y="229" text-anchor="middle" fill="#0c447c">observability</text>
+  <text class="s" x="89" y="244" text-anchor="middle">screenshots + logs</text>
+  <rect x="180" y="210" width="150" height="44" rx="10" fill="#eeedfe" stroke="#534ab7"/>
+  <text class="t" x="255" y="229" text-anchor="middle" fill="#2e2a6b">reporting</text>
+  <text class="s" x="255" y="244" text-anchor="middle">HTML · RTM · fan-out</text>
+  <rect x="346" y="210" width="150" height="44" rx="10" fill="#eeedfe" stroke="#534ab7"/>
+  <text class="t" x="421" y="229" text-anchor="middle" fill="#2e2a6b">security</text>
+  <text class="s" x="421" y="244" text-anchor="middle">manifest + secret scan</text>
+  <rect x="512" y="210" width="150" height="44" rx="10" fill="#e6f0fb" stroke="#2563eb"/>
+  <text class="t" x="587" y="229" text-anchor="middle" fill="#0c447c">secrets</text>
+  <text class="s" x="587" y="244" text-anchor="middle">resolve + mask</text>
+
+  <!-- Row E: setup & devices -->
+  <rect x="14" y="268" width="150" height="44" rx="10" fill="#e6f0fb" stroke="#2563eb"/>
+  <text class="t" x="89" y="287" text-anchor="middle" fill="#0c447c">drivers</text>
+  <text class="s" x="89" y="302" text-anchor="middle">caps · AppSource</text>
+  <rect x="180" y="268" width="150" height="44" rx="10" fill="#eeedfe" stroke="#534ab7"/>
+  <text class="t" x="255" y="287" text-anchor="middle" fill="#2e2a6b">devices</text>
+  <text class="s" x="255" y="302" text-anchor="middle">local discovery → pool</text>
+  <rect x="346" y="268" width="150" height="44" rx="10" fill="#eeedfe" stroke="#534ab7"/>
+  <text class="t" x="421" y="287" text-anchor="middle" fill="#2e2a6b">browserstack</text>
+  <text class="s" x="421" y="302" text-anchor="middle">cloud DeviceProvider</text>
+  <rect x="512" y="268" width="150" height="44" rx="10" fill="#e7e8ec" stroke="#6b7280"/>
+  <text class="t" x="587" y="287" text-anchor="middle" fill="#1f2937">SPI drop-ins</text>
+  <text class="s" x="587" y="302" text-anchor="middle">distribution · testmgmt…</text>
+
+  <!-- connector -->
+  <line x1="338" y1="318" x2="338" y2="340" stroke="#534ab7" stroke-width="2"/>
+  <polygon points="338,348 333,338 343,338" fill="#534ab7"/>
+
+  <!-- Row F: core -->
+  <rect x="14" y="348" width="648" height="46" rx="10" fill="#e7e8ec" stroke="#6b7280"/>
+  <text class="t" x="338" y="368" text-anchor="middle" fill="#1f2937">core · the engine everything sits on</text>
+  <text class="s" x="338" y="384" text-anchor="middle">config cascade · per-thread context · event bus · device pool · SPI registry · lifecycle</text>
+</svg>
