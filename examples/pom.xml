@@ -19,6 +19,7 @@
     <dependency><groupId>io.framework</groupId><artifactId>devices</artifactId><version>${project.version}</version></dependency>
     <dependency><groupId>io.framework</groupId><artifactId>locators</artifactId><version>${project.version}</version></dependency>
     <dependency><groupId>io.framework</groupId><artifactId>ai-heuristic</artifactId><version>${project.version}</version></dependency>
+    <dependency><groupId>io.framework</groupId><artifactId>ai-llm</artifactId><version>${project.version}</version></dependency>
     <dependency><groupId>io.framework</groupId><artifactId>actions</artifactId><version>${project.version}</version></dependency>
     <dependency><groupId>io.framework</groupId><artifactId>observability</artifactId><version>${project.version}</version></dependency>
     <dependency><groupId>io.framework</groupId><artifactId>reporting</artifactId><version>${project.version}</version></dependency>

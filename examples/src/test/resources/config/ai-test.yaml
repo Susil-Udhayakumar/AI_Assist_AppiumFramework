@@ -1,0 +1,7 @@
+env: test
+platform: android
+ai:
+  enabled: false
+  providers:
+    healer: heuristic
+    classifier: heuristic

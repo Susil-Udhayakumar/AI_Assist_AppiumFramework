@@ -1,9 +1,11 @@
 package io.framework.examples;
 
 import io.framework.actions.ElementActions;
-import io.framework.ai.heuristic.HeuristicElementHealer;
+import io.framework.ai.llm.LlmClient;
 import io.framework.core.config.FrameworkConfig;
 import io.framework.core.context.ContextManager;
+import io.framework.core.exec.SmartRetryAnalyzer;
+import io.framework.core.failure.FailureClassifier;
 import io.framework.core.driver.DriverProvider;
 import io.framework.core.events.EventBus;
 import io.framework.core.lifecycle.DriverLifecycle;
@@ -12,7 +14,6 @@ import io.framework.core.spi.ServiceRegistry;
 import io.framework.devices.DeviceProvider;
 import io.framework.devices.DevicePools;
 import io.framework.knowledge.KnowledgeStore;
-import io.framework.knowledge.MemoizingElementHealer;
 import io.framework.locators.ElementHealer;
 import io.framework.locators.LocatorRepository;
 import io.framework.locators.SmartFinder;
@@ -40,7 +41,8 @@ public final class Bootstrap {
     public static FrameworkComponents assemble(FrameworkConfig config,
                                                LocatorRepository locators,
                                                Path reportBase,
-                                               Path knowledgeDir) {
+                                               Path knowledgeDir,
+                                               LlmClient llmClient) {
         ServiceRegistry registry = new ServiceRegistry();
 
         DriverProvider driverProvider = registry.get(DriverProvider.class);
@@ -50,18 +52,22 @@ public final class Bootstrap {
         EventBus bus = new EventBus();
         DriverLifecycle lifecycle = new DriverLifecycle(pool, driverProvider, bus);
 
-        // persistent learning by default: cross-run ranking + reusable heals, still no-AI
+        // config-driven AI selection, wrapped in persistent memory (heuristic default, llm optional)
         KnowledgeStore knowledge = new KnowledgeStore(knowledgeDir);
-        ElementHealer healer = new MemoizingElementHealer(new HeuristicElementHealer(), knowledge.heals());
+        ElementHealer healer = AiSelection.elementHealer(config, knowledge, llmClient);
+        FailureClassifier classifier = AiSelection.failureClassifier(config, knowledge, llmClient);
         SmartFinder finder = new SmartFinder(locators, knowledge.locators(), healer);
         ElementActions actions = new ElementActions();
+
+        // activate classifier-driven retries from config
+        SmartRetryAnalyzer.configure(config.retry(), classifier);
 
         Reporters reporters = new Reporters(registry.all(Reporter.class));
         CaptureLayout layout = new CaptureLayout(reportBase);
         Screenshotter screenshotter = new Screenshotter();
         ScreenshotProvider screenshotProvider = currentScreenshotSource();
 
-        return new FrameworkComponents(bus, lifecycle, pool, finder, actions,
+        return new FrameworkComponents(bus, lifecycle, pool, finder, actions, classifier,
                 reporters, layout, screenshotter, screenshotProvider);
     }
 

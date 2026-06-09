@@ -2,6 +2,7 @@ package io.framework.examples;
 
 import io.framework.actions.ElementActions;
 import io.framework.core.events.EventBus;
+import io.framework.core.failure.FailureClassifier;
 import io.framework.core.lifecycle.DriverLifecycle;
 import io.framework.core.parallel.DevicePool;
 import io.framework.locators.SmartFinder;
@@ -17,6 +18,7 @@ public record FrameworkComponents(
         DevicePool devicePool,
         SmartFinder finder,
         ElementActions elementActions,
+        FailureClassifier failureClassifier,
         Reporters reporters,
         CaptureLayout captureLayout,
         Screenshotter screenshotter,
