@@ -30,6 +30,27 @@ class ActionSupportTest {
     }
 
     @Test
+    void extendedGesturesSupportedOnBoth() {
+        assertThat(ActionSupport.isSupported(Action.FLING, Platform.BOTH)).isTrue();
+        assertThat(ActionSupport.isSupported(Action.SCROLL_TO_ELEMENT, Platform.ANDROID)).isTrue();
+        assertThat(ActionSupport.isSupported(Action.TWO_FINGER_TAP, Platform.IOS)).isTrue();
+    }
+
+    @Test
+    void toastAndWatcherAreAndroidOnly() {
+        assertThat(ActionSupport.isSupported(Action.GET_TOAST, Platform.ANDROID)).isTrue();
+        assertThat(ActionSupport.isSupported(Action.GET_TOAST, Platform.IOS)).isFalse();
+        assertThat(ActionSupport.isSupported(Action.REGISTER_WATCHER, Platform.IOS)).isFalse();
+    }
+
+    @Test
+    void siriAndPickerWheelAreIosOnly() {
+        assertThat(ActionSupport.isSupported(Action.SIRI_COMMAND, Platform.IOS)).isTrue();
+        assertThat(ActionSupport.isSupported(Action.SIRI_COMMAND, Platform.ANDROID)).isFalse();
+        assertThat(ActionSupport.isSupported(Action.SELECT_PICKER_WHEEL, Platform.ANDROID)).isFalse();
+    }
+
+    @Test
     void requireThrowsForUnsupportedPlatform() {
         assertThatThrownBy(() -> ActionSupport.require(Action.READ_SMS, Platform.IOS))
                 .isInstanceOf(UnsupportedActionException.class)
