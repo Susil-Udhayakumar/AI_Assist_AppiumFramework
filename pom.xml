@@ -23,6 +23,7 @@
     <module>observability</module>
     <module>reporting</module>
     <module>knowledge</module>
+    <module>security</module>
     <module>examples</module>
   </modules>
 
